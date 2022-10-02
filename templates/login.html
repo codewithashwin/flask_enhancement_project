@@ -1,18 +1,22 @@
-<h1>Login</h1>
+<!DOCTYPE html>
+<html lang="en">
 
-<div>
-{% for message in get_flashed_messages() %}
-{{ message }}
-{% endfor %}
-</div>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
 
+<body>
+	<h1>Login</h1>
+	<form action="" method="post">
+		{{form.hidden_tag()}}
+		{{form.username}}
+		{{form.password}}
+		{{form.submit}}
+	</form>
 
-<form method="POST">
-	{{ form.hidden_tag() }}
-	{{ form.email.label }} {{ form.email() }}
-	{{ form.password.label }} {{ form.password() }}
-	{{ form.submit.label }}{{ form.submit() }}
-</form>
+</body>
 
-<p>New user></p>
-<a href="{{ url_for('register') }}">Click here to register</a>
+</html>

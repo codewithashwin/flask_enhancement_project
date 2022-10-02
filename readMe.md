@@ -1,6 +1,6 @@
 In the above code, we have some functionality you need to below functionality to your code
 
-1. Create DB
+1. Create DB --> Done
 2. Register user(with email, username unique)
 3. Login
 4. My profile with all details, with the edit button
