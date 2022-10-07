@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<h1>Update the details</h1>
+<form action="{{url_for('update_user', id=current_user.id)}}" method="POST">
+    {{form.hidden_tag()}}<br>
+    {{form.email}}<br>
+    {{form.first_name}}<br>
+    {{form.last_name}}<br>
+    {{form.mobile_no}}<br>
+    {{form.gender}}<br>
+    {{form.age}}<br>
+    {{form.about}}<br>
+    {{form.submit}}<br>
+    <button class="btn btn-danger btn-sm" type="button"> <a
+            href="{{ url_for('delete_login_user', id=current_user.id) }}">Delete</a> </button>
+
+</form>
+
+{% endblock content %}
