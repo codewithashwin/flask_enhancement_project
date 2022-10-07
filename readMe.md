@@ -4,7 +4,7 @@ In the above code, we have some functionality you need to below functionality to
 2. Register user(with email, username unique) --> Done
 3. Login --> Done
 4. My profile with all details, with the edit button --. Done
-5. Creat notes
+5. Creat notes --> Pending(Show all Notes, Specific NOtes, Delete Notes, User Notes list)
 6. Add another user's comments to your notes (like Facebook)
 7. Admin has rights to delete other users in DB
 

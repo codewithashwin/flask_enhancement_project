@@ -1,4 +1,3 @@
-from ast import Pass
 from flask import Flask, render_template, url_for, redirect, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
@@ -58,6 +57,13 @@ class LoginForm(FlaskForm):
 
     submit = SubmitField('Login')
 
+class NotesForm(FlaskForm):
+    Name = StringField(validators=[
+                           InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Name"})
+    Content = TextAreaField(validators=[
+                           InputRequired(),], render_kw={"placeholder": "Content"})
+    submit = SubmitField('Submit')
+
 # --------------------------------------------------------------------------------
 app = Flask(__name__)
 db = SQLAlchemy(app)
@@ -83,6 +89,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(200))
     password = db.Column(db.String(10))
     profile = db.relationship("Profile", backref="app_user", cascade="all, delete", lazy="select", uselist=False) # One-To-One Relationship
+    note = db.relationship("Notes", backref="note_user", cascade="all, delete", lazy="select")
     
     def __init__(self, username, email, password):
         self.username = username
@@ -103,8 +110,16 @@ class Profile(db.Model):
     about = db.Column(db.String(100))
     user = db.Column(db.Integer, db.ForeignKey("user.id"))
 
+# Notes
+class Notes(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(25), default="New Note")
+    content = db.Column(db.Text, default=" ")
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+
 # --------------------------------------------------------------------------------
 @app.route('/')
+@login_required
 def index():
     return render_template("index.html")
 
@@ -148,6 +163,7 @@ def register():
     return render_template("register.html", form=form)
 
 @app.route('/update/<int:id>', methods=['GET', 'POST'])
+@login_required
 def update_user(id):
     form = UpdateForm()
     user_to_update = User.query.get_or_404(id)
@@ -187,6 +203,21 @@ def delete_login_user(id):
     print("Something went wrong, look for cause")
     return redirect(url_for('dashboard'))
 
+@app.route('/add_note', methods=['POST', 'GET'])
+@login_required
+def add_note():
+    form = NotesForm()
+    if form.validate_on_submit():
+        user_id = User.query.get_or_404(current_user.id)
+        if request.method == 'POST':
+            try:
+                new_note = Notes(name = form.Name.data, content = form.Content.data, user_id = user_id.id)
+                db.session.add(new_note)
+                db.session.commit()
+                return redirect(url_for('dashboard'))
+            except:
+                print("Error")
+    return render_template('add note.html', form=form)
 
 if __name__ == "__main__":
     app.run()
